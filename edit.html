@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Edit Recipe - Recipe App</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="view.html">View Recipes</a>
+    <a href="add.html">Add Recipe</a>
+    <a href="edit.html">Edit Recipe</a>
+</nav>
+
+<div class="container">
+    <h1>Edit a Recipe</h1>
+
+    <label for="recipe-select">Select a recipe to edit</label>
+    <select id="recipe-select">
+        <option value="">--Choose a recipe --</option>
+    </select>
+
+    <form id="edit-recipe-form">
+        <label for="recipe_name">Recipe Name</label>
+        <input type="text" id="recipe_name" name="recipe_name" required>
+
+        <label for="servings">Servings</label>
+        <input type="number" id="servings" name="servings">
+
+        <label for="total_calories">Total Calories</label>
+        <input type="number" id="total_calories" name="total_calories">
+
+        <label for="calories_per_serving">Calories Per Serving</label>
+        <input type="number" id="calories_per_serving" name="calories_per_serving">
+
+        <label for="pairs_with">Pairs With</label>
+        <input type="text" id="pairs_with" name="pairs_with">
+
+        <label for="suggested_sides">Suggested Sides</label>
+        <input type="text" id="pairs_with" name="pairs_with">
+
+        <button type="submit" class="btn">Update Recipe</button>
+    </form>
+</div>
+
+</body>
+</html>
+
