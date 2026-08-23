@@ -1,10 +1,10 @@
 const API_BASE = "https://recipe-app-469c.onrender.com/api/v1/recipes";
 
-//JS - runs once page finishes loading
+//JS - runs once page finishes loading --------------------------
 document.addEventListener("DOMContentLoaded", () => {
     const recipeList = document.getElementById("recipe-list");
 
-    // only run fetch if on view.html
+// only run fetch if on view.html ----------------------
     if (recipeList) {
         loadRecipes();
     }
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const recipes = await response.json();
         
 
-        //JS - builds HTML string from recipe array & injects
+//JS - builds HTML string from recipe array & injects --------------------
         recipeList.innerHTML = recipes.map(recipe => `
             <div class="recipe-card">
                 <h3>${recipe.recipe_name}</h3>
@@ -29,10 +29,39 @@ document.addEventListener("DOMContentLoaded", () => {
         recipeList.innerHTML = "<p>Something went wrong loading your recipes. </p>";
         }
     }
-    const addForm = document.getElementById("add-recipe-form");
+
+// dynamic add ingredients input --------------------------
+const addIngredientBtn = document.getElementById("add-ingredient-btn");
+if (addIngredientBtn) {
+    addIngredientBtn.addEventListener("click", () => {
+        const container = document.getElementById("ingredients-container");
+        const newInput = document.createElement("input");
+        newInput.type = "text";
+        newInput.className = "ingredient-input";
+        newInput.placeholder = "e.g. garlic";
+        container.appendChild(newInput);
+    });
+}
+
+// dynamic add steps input -------------------------------------------------------------
+const addStepBtn = document.getElementById("add-step-btn");
+if (addStepBtn) {
+    addStepBtn.addEventListener("click", () => {
+        const container = document.getElementById("steps-container");
+        const newInput = document.createElement("input");
+        newInput.type = "text";
+        newInput.className = "step-input";
+        newInput.placeholder = "e.g. Bake for 20 minutes";
+        container.appendChild(newInput);
+    });
+}
+
+
+const addForm = document.getElementById("add-recipe-form");
+
 if (addForm) {
     addForm.addEventListener("submit", async (e) => {
-        e.preventDefault(); //stops browser's default full page reload submit
+        e.preventDefault(); //stops browser's default full page reload submit ----------------------
 
         const formMessage = document.getElementById("form-message");
 
@@ -44,6 +73,7 @@ if (addForm) {
             pairs_with: document.getElementById("pairs_with").value || null,
             suggested_sides: document.getElementById("suggested_sides").value || null
         };
+
 
         try {
             const response = await fetch(API_BASE, {
@@ -58,12 +88,14 @@ if (addForm) {
 
             formMessage.textContent = "Recipe saved successfully!";
             formMessage.style.color = "green";
-            addForm.reset(); //clears fields
+            addForm.reset(); //clears fields --------------------------------------------------
         } catch (err) {
             console.error(err);
             formMessage.textContent = "Something went wrong saving your recipe.";
             formMessage.style.color = "red";
         }
+
+
     });
 
 }
