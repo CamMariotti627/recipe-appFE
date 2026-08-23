@@ -1,0 +1,72 @@
+const API_BASE = "https://recipe-app-469c.onrender.com/api/v1/recipes";
+
+//JS - runs once page finishes loading
+document.addEventListener("DOMContentLoaded", () => {
+    const recipeList = document.getElementById("recipe-list");
+
+    // only run fetch if on view.html
+    if (recipeList) {
+        loadRecipes();
+    }
+
+    async function loadRecipes() {
+        try {
+            const response = await fetch(API_BASE);
+            const recipes = await response.json();
+        
+
+        //JS - builds HTML string from recipe array & injects
+        recipeList.innerHTML = recipes.map(recipe => `
+            <div class="recipe-card">
+                <h3>${recipe.recipe_name}</h3>
+                <p>Servings: ${recipe.servings ?? "N/A"}</p>
+                <p>Calories: ${recipe.total_calories ?? "N/A"}</p>
+                <p>Pairs with: ${recipe.pairs_with ?? "N/A"}</p>
+            </div>
+            `).join("");
+    } catch (err) {
+        console.error(err);
+        recipeList.innerHTML = "<p>Something went wrong loading your recipes. </p>";
+        }
+    }
+    const addForm = document.getElementById("add-recipe-form");
+if (addForm) {
+    addForm.addEventListener("submit", async (e) => {
+        e.preventDefault(); //stops browser's default full page reload submit
+
+        const formMessage = document.getElementById("form-message");
+
+        const newRecipe = {
+            recipe_name: document.getElementById("recipe_name").value,
+            servings: document.getElementById("servings").value || null,
+            total_calories: document.getElementById("total_calories").value || null,
+            calories_per_serving: document.getElementById("calories_per_serving").value || null,
+            pairs_with: document.getElementById("pairs_with").value || null,
+            suggested_sides: document.getElementById("suggested_sides").value || null
+        };
+
+        try {
+            const response = await fetch(API_BASE, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newRecipe)
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to save recipe.");
+            }
+
+            formMessage.textContent = "Recipe saved successfully!";
+            formMessage.style.color = "green";
+            addForm.reset(); //clears fields
+        } catch (err) {
+            console.error(err);
+            formMessage.textContent = "Something went wrong saving your recipe.";
+            formMessage.style.color = "red";
+        }
+    });
+
+}
+});
+
+
