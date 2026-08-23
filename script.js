@@ -6,12 +6,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // only run fetch if on view.html ----------------------
     if (recipeList) {
-        loadRecipes();
+        recipeList.innerHTML = "<p> Use the search options above to find recipes.</p>";
     }
 
-    async function loadRecipes() {
+    async function loadRecipes(url = API_BASE) {
         try {
-            const response = await fetch(API_BASE);
+            const response = await fetch(url);
             const recipes = await response.json();
         
 
@@ -29,6 +29,37 @@ document.addEventListener("DOMContentLoaded", () => {
         recipeList.innerHTML = "<p>Something went wrong loading your recipes. </p>";
         }
     }
+
+// search by name
+const searchBtn = document.getElementById("search-btn");
+if (searchBtn) {
+    searchBtn.addEventListener("click", () => {
+        const term = document.getElementById("search-input").value;
+        loadRecipes(term ? `${API_BASE}?name=${encodeURIComponent(term)}` : API_BASE);
+    });
+}
+
+// ingredients available search
+const ingredientBtn = document.getElementById("ingredient-search-btn");
+if (ingredientBtn) {
+    ingredientBtn.addEventListener("click", () => {
+        const term = document.getElementById("ingredient-input").value;
+        if (!term) return;
+        loadRecipes(`${API_BASE}/search-by-ingredient?ingredient=${encodeURIComponent(term)}`);
+    });
+}
+
+// exclude search
+const excludeBtn = document.getElementById("exclude-search-btn");
+if (excludeBtn) {
+    excludeBtn.addEventListener("click", () => {
+        const term = document.getElementById("exclude-input").value;
+        if (!term) return;
+        loadRecipes(`${API_BASE}/exclude-ingredient?exclude=${encodeURIComponent(term)}`);
+    });
+}
+
+
 
 // dynamic add ingredients input --------------------------
 const addIngredientBtn = document.getElementById("add-ingredient-btn");
