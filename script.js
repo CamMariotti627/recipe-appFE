@@ -34,31 +34,19 @@ document.addEventListener("DOMContentLoaded", () => {
 const searchBtn = document.getElementById("search-btn");
 if (searchBtn) {
     searchBtn.addEventListener("click", () => {
-        const term = document.getElementById("search-input").value;
-        loadRecipes(term ? `${API_BASE}?name=${encodeURIComponent(term)}` : API_BASE);
+        const name = document.getElementById("search-input").value;
+        const ingredients = document.getElementById("ingredient-input").value;
+        const exclude = document.getElementById("exclude-input").value;
+
+        const params = new URLSearchParams();
+        if (name) params.append("name", name);
+        if (ingredients) params.append("ingredients", ingredients);
+        if (exclude) params.append("exclude", exclude);
+
+        const url = params.toString() ? `${API_BASE}?${params.toString()}` : API_BASE;
+        loadRecipes(url);
     });
 }
-
-// ingredients available search
-const ingredientBtn = document.getElementById("ingredient-search-btn");
-if (ingredientBtn) {
-    ingredientBtn.addEventListener("click", () => {
-        const term = document.getElementById("ingredient-input").value;
-        if (!term) return;
-        loadRecipes(`${API_BASE}/search-by-ingredient?ingredient=${encodeURIComponent(term)}`);
-    });
-}
-
-// exclude search
-const excludeBtn = document.getElementById("exclude-search-btn");
-if (excludeBtn) {
-    excludeBtn.addEventListener("click", () => {
-        const term = document.getElementById("exclude-input").value;
-        if (!term) return;
-        loadRecipes(`${API_BASE}/exclude-ingredient?exclude=${encodeURIComponent(term)}`);
-    });
-}
-
 
 
 // dynamic add ingredients input --------------------------
