@@ -4,10 +4,40 @@ const API_BASE = "https://recipe-app-469c.onrender.com/api/v1/recipes";
 document.addEventListener("DOMContentLoaded", () => {
     const recipeList = document.getElementById("recipe-list");
 
-// only run fetch if on view.html ----------------------
-    if (recipeList) {
-        recipeList.innerHTML = "<p> Use the search options above to find recipes.</p>";
+//check for a recipe_id in URL
+const urlParams = new URLSearchParams(window.location.search);
+const recipeId = urlParams.get("recipe_id");
+
+if (recipeId) {
+    loadSingleRecipe(recipeId);
+} else if (recipeList) {
+    recipeList.innerHTML = "<p>Use the search options above to find recipes. </p>";
+}
+
+async function loadSingleRecipe(id) {
+    try {
+        const response = await fetch(`${API_BASE}/${id}`);
+        const recipe = await response.json();
+
+        recipeList.innerHTML = `
+        <a href="view.html">&larr; Back to search</a>
+        <h2>${recipe.recipe_name}</h2>
+        <p>Servings: ${recipe.servings ?? "N/A"}</p>
+        <p>Calories: ${recipe.total_calories ?? "N/A"}</p>
+        <p>Pairs with: ${recipe.pairs_with ?? "N/A"}</p>
+        <p>Calories per serving: ${recipe.calories_per_serving ?? "N/A"}</p>
+        <p>Suggested sides: ${recipe.suggested_sides ?? "N/A"}</p>
+        <h3>Ingredients</h3>
+        <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
+        <h3>Steps</h3>
+        <ol>${recipe.steps.map(s => `<li>${s}</li>`).join('')}</ol>
+        `;
+    } catch (err) {
+            console.error(err);
+            recipeList.innerHTML = "<p>Something went wrong loading this recipe.</p>";
+        }
     }
+
 
     async function loadRecipes(url = API_BASE) {
         try {
@@ -18,10 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
 //JS - builds HTML string from recipe array & injects --------------------
         recipeList.innerHTML = recipes.map(recipe => `
             <div class="recipe-card">
-                <h3>${recipe.recipe_name}</h3>
-                <p>Servings: ${recipe.servings ?? "N/A"}</p>
-                <p>Calories: ${recipe.total_calories ?? "N/A"}</p>
-                <p>Pairs with: ${recipe.pairs_with ?? "N/A"}</p>
+                <a href="view.html?recipe_id=${recipe.recipe_id}">${recipe.recipe_name}</a>
             </div>
             `).join("");
     } catch (err) {
