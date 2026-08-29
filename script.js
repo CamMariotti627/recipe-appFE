@@ -4,6 +4,20 @@ const API_BASE = "https://recipe-app-469c.onrender.com/api/v1/recipes";
 document.addEventListener("DOMContentLoaded", () => {
     const recipeList = document.getElementById("recipe-list");
 
+const recipeSelect = document.getElementById("recipe-select");
+if (recipeSelect) {
+    fetch(API_BASE)
+        .then(result => result.json())
+        .then(recipes => {
+            recipes.forEach(recipe => {
+                const option = document.createElement("option");
+                option.value = recipe.recipe_id;
+                option.textContent = recipe.recipe_name;
+                recipeSelect.appendChild(option);
+            });
+        });
+}
+
 //check for a recipe_id in URL
 const urlParams = new URLSearchParams(window.location.search);
 const recipeId = urlParams.get("recipe_id");
