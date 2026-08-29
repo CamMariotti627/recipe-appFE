@@ -17,15 +17,26 @@
 
 <div class="container">
     <h1>Edit a Recipe</h1>
+    <p id="form-message"></p>
 
     <label for="recipe-select">Select a recipe to edit</label>
     <select id="recipe-select">
         <option value="">--Choose a recipe --</option>
     </select>
 
+
+
     <form id="edit-recipe-form">
         <label for="recipe_name">Recipe Name</label>
         <input type="text" id="recipe_name" name="recipe_name" required>
+
+        <label>Ingredients</label>
+        <div id="ingredients-containter"></div>
+        <button type="button" id="add-ingredient-btn" class="btn">+ Add Ingredient</button>
+
+        <label>Steps</label>
+        <div id="steps-container"></div>
+        <button type="button" id="add-step-btn" class="btn">+ Add Step</button>
 
         <label for="servings">Servings</label>
         <input type="number" id="servings" name="servings">
@@ -41,6 +52,8 @@
 
         <label for="suggested_sides">Suggested Sides</label>
         <input type="text" id="pairs_with" name="pairs_with">
+
+
 
         <button type="submit" class="btn">Update Recipe</button>
     </form>
