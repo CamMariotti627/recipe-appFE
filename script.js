@@ -203,6 +203,60 @@ if (addForm) {
     });
 
 }
+
+// edit form PUT submit button
+const editForm = document.getElementById("edit-recipe-form");
+
+if (editForm) {
+    editForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formMessage = document.getElementById("form-message");
+        const selectedId = recipeSelect.value;
+
+        if (!selectedId) {
+            formMessage.textContent = "Please select a recipe to edit first.";
+            formMessage.style.color = "red";
+            return;
+        }
+
+        const ingredientInputs = document.querySelectorAll("#ingredients-container .ingredient-input");
+        const stepInputs = document.querySelectorAll("#steps-container .step-input");
+        const steps = Array.from(stepInputs).map(input => input.value).filter(value => value);
+        const ingredients = Array.from(ingredientInputs).map(input => input.value).filter(value => value);
+
+        const updatedRecipe = {
+            recipe_name: document.getElementById("recipe_name").value,
+            servings: document.getElementById("servings").value || null,
+            total_calories: document.getElementById("total_calories").value || null,
+            calories_per_serving: document.getElementById("calories_per_serving").value || null,
+            pairs_with: document.getElementById("pairs_with").value || null,
+            suggested_sides: document.getElementById("suggested_sides").value || null,
+            ingredients: ingredients,
+            steps: steps
+        };
+
+        try {
+            const response = await fetch(`${API_BASE}/${selectedId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedRecipe)
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to update recipe.");
+            }
+
+            formMessage.textContent = "Recipe updated successfully!";
+            formMessage.style.color = "green";
+        } catch (err) {
+            console.error(err);
+            formMessage.textContent = "Something went wrong updating your recipe.";
+            formMessage.style.color = "red";
+        }
+    });
+}
+
 });
 
 
