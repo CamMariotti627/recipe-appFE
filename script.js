@@ -16,7 +16,51 @@ if (recipeSelect) {
                 recipeSelect.appendChild(option);
             });
         });
-}
+
+//auto fill form whith selected recipe
+recipeSelect.addEventListener("change", async () => {
+    const selectedId = recipeSelect.value;
+    if (!selectedId) return;
+
+    try {
+        const response = await fetch(`${API_BASE}/${selectedId}`);
+        const recipe = await response.json();
+
+        document.getElementById("recipe_name").value = recipe.recipe_name ?? "";
+        document.getElementById("servings").value = recipe.servings ?? "";
+        document.getElementById("total_calories").value = recipe.total_calories ?? "";
+        document.getElementById("calories_per_serving").value = recipe.calories_per_serving ?? "";
+        document.getElementById("pairs_with").value = recipe.pairs_with ?? "";
+        document.getElementById("suggested_sides").value = recipe.suggested_sides ?? "";
+
+    //clears existing ingredients/steps to rebuild fresh
+    const ingredientsContainer = document.getElementById("ingredients-container");
+    ingredientsContainer.innerHTML = "";
+    recipe.ingredients.forEach(ingredientName => {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "ingredient-input";
+        input.value = ingredientName;
+        ingredientsContainer.appendChild(input);
+    });
+
+    const stepsContainer = document.getElementById("steps-container");
+    stepsContainer.innerHTML = "";
+    recipe.steps.forEach(stepText => {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "step-input";
+        input.value = stepText;
+        stepsContainer.appendChild(input);
+    });
+} catch (err) {
+    console.error(err);
+    }
+
+});
+
+    }
+
 
 //check for a recipe_id in URL
 const urlParams = new URLSearchParams(window.location.search);
